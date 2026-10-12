@@ -1,0 +1,18 @@
+
+# Set a light theme for the dashboard
+[theme]
+
+# Teal color for buttons and highlights
+primaryColor = "#0D9488"
+
+# Main background color
+backgroundColor = "#F4F8FB"
+
+# Background for input fields and sidebars
+secondaryBackgroundColor = "#E5EEF5"
+
+# Dark text for easy reading
+textColor = "#16324F"
+
+# Use a clean, modern font
+font = "sans serif"
