@@ -192,15 +192,8 @@ with st.form("sales_form"):
         "🔮 Predict Sales", use_container_width=True
     )
 
-# Load the training dataset's average sales
-@st.cache_data
-def load_average_sales():
-    # Find and read the original training file
-    train_path = PROJECT_DIR / "data" / "raw" / "Train.csv"
-    train_data = pd.read_csv(train_path)
-
-    # Calculate average sales from the training data
-    return train_data["Item_Outlet_Sales"].mean()
+# Store the average sales calculated during model development
+AVERAGE_SALES = 2181.288914
 
 # Predict when the user submits the form
 if submitted:
@@ -230,7 +223,8 @@ if submitted:
     })
 
     # Get the average sales from the training dataset
-    average_sales = load_average_sales()
+    # Use the saved average instead of reading Train.csv
+    average_sales = AVERAGE_SALES
 
     # Display the prediction result
     st.divider()
