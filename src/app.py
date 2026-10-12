@@ -30,6 +30,10 @@ def load_model():
 
 model = load_model()
 
+# Create an empty prediction history for this session
+if "prediction_history" not in st.session_state:
+    st.session_state.prediction_history = []
+
 # Add sidebar information
 with st.sidebar:
     st.title("🛒 BigMart")
@@ -218,6 +222,13 @@ if submitted:
     # Predict sales using the trained model
     prediction = model.predict(input_data)[0]
 
+    # Save the current prediction in the session history
+    st.session_state.prediction_history.append({
+        "Item Identifier": item_id.strip().upper(),
+        "Outlet Identifier": outlet_id,
+        "Predicted Sales": round(float(prediction), 2)
+    })
+
     # Get the average sales from the training dataset
     average_sales = load_average_sales()
 
@@ -271,3 +282,29 @@ if submitted:
         "The comparison uses the overall training-data average. "
         "It does not guarantee actual future sales."
     )
+
+# Display prediction history
+st.divider()
+st.subheader("📋 Prediction History")
+
+# Show previous predictions if available
+if st.session_state.prediction_history:
+    history_data = pd.DataFrame(
+        st.session_state.prediction_history
+    )
+
+    # Display the history table
+    st.dataframe(history_data, use_container_width=True)
+
+    # Compare predictions in a chart
+    st.subheader("📈 Prediction History Chart")
+    st.bar_chart(
+        history_data.set_index("Item Identifier")["Predicted Sales"]
+    )
+
+    # Clear all saved predictions
+    if st.button("Clear Prediction History"):
+        st.session_state.prediction_history = []
+        st.rerun()
+else:
+    st.info("Your predictions will appear here after you make one.")
